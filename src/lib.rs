@@ -1,4 +1,6 @@
 
+//! allowing non snake case for matrix variables A x B = C, which is the
+//! correct mathematical notation !!
 //! boolean matrix
 //!
 //! An data structure that handles boolean matrix operations.
@@ -8,6 +10,7 @@
 //!
 //! Creating a matrix is done within the submodule booleanmatrix
 //! We have addition,multiplication and setting and getting specific indexes.
+#[allow(non_snake_case)]
 
 pub mod booleanmatrix {
 
@@ -24,7 +27,7 @@ pub mod booleanmatrix {
         let size = getvectorsize(n * m);
         let mut avector = Vec::new();
         avector.resize(size,0u64);
-        let mut A = Matrix {
+        let A = Matrix {
             n,
             m,
             bits: avector,
@@ -44,7 +47,7 @@ pub mod booleanmatrix {
 
 
         pub fn multiply(B:Matrix) -> Matrix {
-            let mut C = Matrix{
+            let C = Matrix{
                 n : B.n,
                 m : B.m,
                 bits : Vec::new()
@@ -53,7 +56,7 @@ pub mod booleanmatrix {
         }
 
         pub fn add(B:Matrix) -> Matrix{
-            let mut C = Matrix{
+            let C = Matrix{
                 n : B.n,
                 m : B.m,
                 bits : Vec::new()
@@ -61,11 +64,11 @@ pub mod booleanmatrix {
             return C;
         }
 
-        fn checkrange(this: &Self, i:usize,j:usize){
+       /*fn checkrange(this: &Self, i:usize,j:usize){
             if ( (i < 0) || i > (this.n - 1)) || (j < 0 || j > (this.m - 1)) {
                 panic!(" index out of range ");
             }
-        }
+        }*/
 
         pub fn set(self: &mut Self,mut i:usize,mut j:usize,val:bool) {
             i -= 1;
@@ -92,7 +95,7 @@ pub mod booleanmatrix {
             i -= 1;
             j -= 1;
 
-            Self::checkrange(self,i,j);
+            // Self::checkrange(self,i,j);
 
             let bitsperslot :usize = std::mem::size_of::<u64>() * 8 ;
 
@@ -123,26 +126,37 @@ pub mod booleanmatrix {
 }
 
 #[cfg(test)]
+#[allow(non_snake_case)]
 mod tests{
     use crate::booleanmatrix::{Matrix, NewMatrix};
-    use super::*;
+    // use super::*;
 
     #[test]
     fn test_matrix_init(){
-        let mut A: Matrix = NewMatrix(10,10);
+        let A: Matrix = NewMatrix(10,10);
         assert_eq!(A.n,10);
         assert_eq!(A.m,10);
     }
 
     #[test]
-    fn test_set(){
+    fn test_set_get() -> Result<(),String>{
 
+        let mut A: Matrix = NewMatrix(10,10);
+        for i in 1..11{
+            for j in (1 .. 10).step_by(2){
+                A.set(i,j,true);
+            }
+        }
+
+        for i in 1..11{
+            for j in (1 .. 10).step_by(2){
+                let val = A.get(i,j);
+                assert!(val,"index {} and {} should return true ",i,j);
+            }
+        }
+        Ok(())
     }
 
-    #[test]
-    fn test_get(){
-
-    }
 
     #[test]
     fn test_multiply(){
