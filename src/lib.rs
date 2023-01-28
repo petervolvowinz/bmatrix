@@ -21,7 +21,6 @@ pub mod booleanmatrix {
     // n rows, m columns
     // matrix indexed in flat array style index = i*m + j
     pub fn NewMatrix(n:usize,m:usize) -> Matrix {
-        let zeros: u64 = 0;
         let size = getvectorsize(n * m);
         let mut avector = Vec::new();
         avector.resize(size,0u64);
@@ -44,7 +43,7 @@ pub mod booleanmatrix {
     impl Matrix{
 
 
-        pub fn Multiply(B:Matrix) -> Matrix {
+        pub fn multiply(B:Matrix) -> Matrix {
             let mut C = Matrix{
                 n : B.n,
                 m : B.m,
@@ -53,7 +52,7 @@ pub mod booleanmatrix {
             return C;
         }
 
-        pub fn Add(B:Matrix) -> Matrix{
+        pub fn add(B:Matrix) -> Matrix{
             let mut C = Matrix{
                 n : B.n,
                 m : B.m,
@@ -68,7 +67,7 @@ pub mod booleanmatrix {
             }
         }
 
-        pub fn Set(self: &mut Self,mut i:usize,mut j:usize,val:bool) {
+        pub fn set(self: &mut Self,mut i:usize,mut j:usize,val:bool) {
             i -= 1;
             j -= 1;
 
@@ -89,7 +88,7 @@ pub mod booleanmatrix {
             }
         }
 
-        pub fn Get(self: &Self, mut i:usize,mut j:usize) -> bool{
+        pub fn get(self: &Self, mut i:usize,mut j:usize) -> bool{
             i -= 1;
             j -= 1;
 
@@ -106,10 +105,10 @@ pub mod booleanmatrix {
 
         }
 
-        pub fn Print(self: &Self){
+        pub fn print(self: &Self){
             for i in 1..self.n+1{
                 for j in 1..self.m+1{
-                    if Self::Get(self,i,j){
+                    if Self::get(self,i,j){
                         print!("1");
                     }else{
                         print!("0");
@@ -121,6 +120,39 @@ pub mod booleanmatrix {
 
     }
 
+}
+
+#[cfg(test)]
+mod tests{
+    use crate::booleanmatrix::{Matrix, NewMatrix};
+    use super::*;
+
+    #[test]
+    fn test_matrix_init(){
+        let mut A: Matrix = NewMatrix(10,10);
+        assert_eq!(A.n,10);
+        assert_eq!(A.m,10);
+    }
+
+    #[test]
+    fn test_set(){
+
+    }
+
+    #[test]
+    fn test_get(){
+
+    }
+
+    #[test]
+    fn test_multiply(){
+
+    }
+
+    #[test]
+    fn test_add(){
+
+    }
 }
 
 
