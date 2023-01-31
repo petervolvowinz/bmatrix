@@ -13,7 +13,6 @@
 use crate::booleanmatrix::Matrix;
 
 #[allow(non_snake_case)]
-
 pub mod booleanmatrix {
 
     pub struct Matrix{
