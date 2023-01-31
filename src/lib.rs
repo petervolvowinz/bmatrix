@@ -141,11 +141,22 @@ pub mod booleanmatrix {
             }
         }
 
+        pub fn transpose(self: &Self) -> Matrix{
+            let mut C = NewMatrix(self.m,self.n);
+            for i in 1..self.n+1{
+                for j in 1..self.m+1{
+                    C.set(j,i,self.get(i,j));
+                }
+            }
+            return C;
+        }
+
     }
 
 }
 
 //implements multiply trait for overloading * operator
+#[allow(non_snake_case)]
 impl std::ops::Mul for booleanmatrix::Matrix {
     type Output = Matrix;
     fn mul(self, B: Matrix) -> Matrix {
@@ -154,6 +165,7 @@ impl std::ops::Mul for booleanmatrix::Matrix {
 }
 
 //implements add trait for overloading + operator
+#[allow(non_snake_case)]
 impl std::ops::Add for booleanmatrix::Matrix {
     type Output = Matrix;
     fn add(self, B: Matrix) -> Matrix {
@@ -457,6 +469,59 @@ mod tests{
                     assert_eq!(R.get(i,j),C.get(i,j)," testing the result of a matrix addition on boolean matrices") ;
                 }
             }
+    }
+
+    #[test]
+    fn test_transpose(){
+        let mut A: Matrix = NewMatrix(4,4);
+        A.set(1,1,false);
+        A.set(1,2,false);
+        A.set(1,3,true);
+        A.set(1,4,false);
+
+        A.set(2,1,false);
+        A.set(2,2,false);
+        A.set(2,3,false);
+        A.set(2,4,true);
+
+        A.set(3,1,false);
+        A.set(3,2,false);
+        A.set(3,3,true);
+        A.set(3,4,true);
+
+        A.set(4,1,false);
+        A.set(4,2,false);
+        A.set(4,3,false);
+        A.set(4,4,false);
+
+        let mut R: Matrix = NewMatrix(4,4);
+        R.set(1,1,false);
+        R.set(1,2,false);
+        R.set(1,3,false);
+        R.set(1,4,false);
+
+        R.set(2,1,false);
+        R.set(2,2,false);
+        R.set(2,3,false);
+        R.set(2,4,false);
+
+        R.set(3,1,true);
+        R.set(3,2,false);
+        R.set(3,3,true);
+        R.set(3,4,false);
+
+        R.set(4,1,false);
+        R.set(4,2,true);
+        R.set(4,3,true);
+        R.set(4,4,false);
+
+        let C = A.transpose();
+
+        for i in 1 .. 5 {
+            for j  in 1 .. 5 {
+                assert_eq!(R.get(i,j),C.get(i,j)," testing the result of a matrix transpose on boolean matrices") ;
+            }
+        }
     }
 
 }
