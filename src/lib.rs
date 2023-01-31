@@ -10,6 +10,8 @@
 //!
 //! Creating a matrix is done within the submodule booleanmatrix
 //! We have addition,multiplication and setting and getting specific indexes.
+use crate::booleanmatrix::Matrix;
+
 #[allow(non_snake_case)]
 
 pub mod booleanmatrix {
@@ -46,21 +48,40 @@ pub mod booleanmatrix {
     impl Matrix{
 
 
-        pub fn multiply(B:Matrix) -> Matrix {
-            let C = Matrix{
-                n : B.n,
-                m : B.m,
-                bits : Vec::new()
-            };
+        pub fn multiply(self: & Self,B:Matrix) -> Matrix {
+
+            if self.m != B.n {
+                panic!("cols and rows need to match" );
+            }
+
+            // The matrix product has the dim = (self rows x B cols)
+            let mut C = NewMatrix(self.n,B.m);
+
+            for i in 1..self.n+1{
+                let mut sum = false;
+                for j in 1..B.m+1{
+                    for k in 1..B.n+1{
+                        sum = sum || self.get(i,k) && B.get(k,j);
+                    }
+                    C.set(i,j,sum);
+                }
+            }
+
             return C;
         }
 
-        pub fn add(B:Matrix) -> Matrix{
-            let C = Matrix{
-                n : B.n,
-                m : B.m,
-                bits : Vec::new()
-            };
+        pub fn add(self: &Self, B:Matrix) -> Matrix{
+            if (self.n != B.n) || (self.m != B.m) {
+                panic!("matrix dimensions need to match" );
+            }
+
+            let mut C = NewMatrix(B.n,B.m);
+            for i in 1..B.n+1{
+                for j in 1..B.m+1{
+                    C.set(i,j,self.get(i,j) || B.get(i,j));
+                }
+            }
+
             return C;
         }
 
@@ -125,6 +146,22 @@ pub mod booleanmatrix {
 
 }
 
+//implements multiply trait for overloading * operator
+impl std::ops::Mul for booleanmatrix::Matrix {
+    type Output = Matrix;
+    fn mul(self, B: Matrix) -> Matrix {
+        return self.multiply(B);
+    }
+}
+
+//implements add trait for overloading + operator
+impl std::ops::Add for booleanmatrix::Matrix {
+    type Output = Matrix;
+    fn add(self, B: Matrix) -> Matrix {
+        return self.add(B);
+    }
+}
+
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod tests{
@@ -160,13 +197,122 @@ mod tests{
 
     #[test]
     fn test_multiply(){
+        // the values of A
+        let mut A: Matrix = NewMatrix(3,3);
+        A.set(1,1,true);
+        A.set(1,2,true);
+        A.set(1,3,true);
+        A.set(2,1,true);
+        A.set(2,3,true);
+        A.set(3,2,true);
 
+        // The values of B
+        let mut B: Matrix = NewMatrix(3,3);
+
+        B.set(1,1,true);
+        B.set(2,3,true);
+        B.set(3,1,true);
+        B.set(3,2,true);
+        B.set(3,3,true);
+
+        // Expected result from A x B
+        let mut result: Matrix = NewMatrix(3,3);
+        result.set(1,1,true);
+        result.set(1,2,true);
+        result.set(1,3,true);
+        result.set(2,1,true);
+        result.set(2,2,true);
+        result.set(2,3,true);
+        result.set(3,3,true);
+
+        let D = A.multiply(B);
+
+        // Test result of  A x B
+
+        for i in 1 .. 4 {
+            for j  in 1 .. 4 {
+                assert_eq!(result.get(i,j),D.get(i,j)," testing the result of a matrix multiplication on boolean matrices") ;
+            }
+        }
+    }
+
+    #[test]
+    fn test_new_dim(){
+        let A = NewMatrix(1,3);
+        let B = NewMatrix(3,1);
+
+        let C = A.multiply(B);
+
+        assert_eq!(C.n,1, "testing new dimensions from a matrix multiplication {} expected 1",C.n);
+        assert_eq!(C.m,1, "testing new dimensions from a matrix multiplication {} expected 1",C.m);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_invalid_matrix_mul(){
+        let A = NewMatrix(3,4);
+        let B = NewMatrix(5,6);
+
+        let C = A.multiply(B);
+    }
+
+    //test panic unwind closure
+    #[test]
+    fn test_invalid_matrix_mul2(){
+        let A = NewMatrix(3,4);
+        let B = NewMatrix(5,6);
+
+        let result = std::panic::catch_unwind(|| {
+            let C = A.multiply(B);
+        });
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_overloaded_mul(){
+        // the values of A
+        let mut A: Matrix = NewMatrix(3,3);
+        A.set(1,1,true);
+        A.set(1,2,true);
+        A.set(1,3,true);
+        A.set(2,1,true);
+        A.set(2,3,true);
+        A.set(3,2,true);
+
+        // The values of B
+        let mut B: Matrix = NewMatrix(3,3);
+
+        B.set(1,1,true);
+        B.set(2,3,true);
+        B.set(3,1,true);
+        B.set(3,2,true);
+        B.set(3,3,true);
+
+        // Expected result from A x B
+        let mut result: Matrix = NewMatrix(3,3);
+        result.set(1,1,true);
+        result.set(1,2,true);
+        result.set(1,3,true);
+        result.set(2,1,true);
+        result.set(2,2,true);
+        result.set(2,3,true);
+        result.set(3,3,true);
+
+        let D = A * B;
+
+        for i in 1 .. 4 {
+            for j  in 1 .. 4 {
+                assert_eq!(result.get(i,j),D.get(i,j)," testing the result of a matrix multiplication on boolean matrices") ;
+            }
+        }
     }
 
     #[test]
     fn test_add(){
 
     }
+
 }
 
 
