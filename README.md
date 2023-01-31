@@ -33,9 +33,10 @@ The api consists of the following functions on the Matrix struct
 
 get(i,j:usize) -> bool
 set(i,j:usize,value:bool)
-multiply(A:Matrix,B:Matrix) -> Matrix, C = A * B
-addition(A:Matrix,B:Matrix) -> Matrix, C = A + B
+multiply(B:Matrix) -> Matrix, C = A * B
+addition(B:Matrix) -> Matrix, C = A + B
 print(A:Matrix)
+transpose(A:Matrix) -> Matrix, C = A^T
 ```
 
 ## Tests
