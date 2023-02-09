@@ -56,3 +56,16 @@ To generate a html coverage report use the following command:
 
 
 
+## linking and using library
+First add the path to the package bmatrix in the Cargo.toml file of the project that uses the library.
+```toml
+[dependencies]
+bmatrix = { path = "../bmatrix" }
+
+```
+Then import the library in the main.rs file
+```rust
+use bmatrix::booleanmatrix::{Matrix, NewMatrix};
+```
+
+
