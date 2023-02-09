@@ -10,6 +10,8 @@
 //!
 //! Creating a matrix is done within the submodule booleanmatrix
 //! We have addition,multiplication and setting and getting specific indexes.
+mod depgraph;
+
 use crate::booleanmatrix::Matrix;
 
 #[allow(non_snake_case)]
