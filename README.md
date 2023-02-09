@@ -55,6 +55,13 @@ To generate a html coverage report use the following command:
 ![Coverage report](coverage.png)
 
 
+## adding a dependency graph data structure to the library
+The dependency graph data structure is used to represent the dependencies between the variables in a boolean matrix.
+```rust
+    use bmatrix::graph::{Graph, NewGraph};
+    let mute G = NewGraph(n);
+    ...
+```
 
 ## linking and using library
 First add the path to the package bmatrix in the Cargo.toml file of the project that uses the library.
