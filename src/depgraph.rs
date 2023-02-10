@@ -1,11 +1,18 @@
 //Implements a dependency graph using boolean matrix
+use std::image::{ImageBuffer, Rgb};
+use std::io::stdout;
+use std::fs::File;
+use std::io::BufWriter;
+use std::path::Path;
+
+
 pub mod graph{
     use crate::booleanmatrix::Matrix;
 
     pub struct Graph{
         data: Matrix,
         labels: Vec<String>,
-        colors: Vec<u8>;
+        colors: Vec<u8>,
         visited: Vec<bool>,
     }
 
@@ -88,8 +95,8 @@ pub mod graph{
         }
 
         //return png image of graph
-        pub fn toImage(&self) -> image::DynamicImage{
-            let mut imgbuf = image::ImageBuffer::new(self.data.n as u32, self.data.n as u32);
+        pub fn toImage(&self,xsize : usize,ysize: usize) -> image::DynamicImage{
+            let mut imgbuf = image::ImageBuffer::new(xsize as u32, ysize as u32);
             for (x, y, pixel) in imgbuf.enumerate_pixels_mut() {
                 if self.data.Get(x as usize,y as usize){
                     *pixel = image::Rgb([0, 0, 0]);
